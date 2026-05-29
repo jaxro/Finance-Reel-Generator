@@ -1,0 +1,17 @@
+venv/
+.env
+
+**pycache**/
+*.pyc
+
+output/
+audio/
+videos/
+temp/
+
+.idea/
+.vscode/
+
+*.mp3
+*.mp4
+*.srt
