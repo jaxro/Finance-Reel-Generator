@@ -2,6 +2,8 @@ import os
 from moviepy import (
     VideoFileClip,
     AudioFileClip,
+    ImageClip,
+    CompositeAudioClip,
     concatenate_videoclips
 )
 
@@ -23,8 +25,15 @@ voice_path = os.path.join(
     "voice.mp3"
 )
 
-# Load audio
-audio = AudioFileClip(voice_path)
+hook_path = os.path.join(
+    run_folder,
+    "hook.png"
+)
+
+# Load voice
+audio = AudioFileClip(
+    voice_path
+)
 
 audio_duration = audio.duration
 
@@ -46,7 +55,7 @@ for file in sorted(os.listdir(videos_folder)):
 
         clip = VideoFileClip(path)
 
-        # Limit each clip to 4 sec max
+        # Max 4 sec per clip
         clip = clip.subclipped(
             0,
             min(
@@ -55,7 +64,7 @@ for file in sorted(os.listdir(videos_folder)):
             )
         )
 
-        # Convert to vertical
+        # Convert to vertical format
         target_ratio = 9 / 16
 
         current_ratio = (
@@ -81,7 +90,9 @@ for file in sorted(os.listdir(videos_folder)):
 
         clips.append(clip)
 
-        print(f"Loaded {file}")
+        print(
+            f"Loaded {file}"
+        )
 
     except Exception as e:
 
@@ -97,7 +108,7 @@ if not clips:
         "No videos found."
     )
 
-# Repeat clips until audio ends
+# Repeat clips until audio duration is covered
 extended_clips = []
 
 total_duration = 0
@@ -121,21 +132,98 @@ print(
     f"Generated timeline: {total_duration:.2f}s"
 )
 
-# Merge all clips
-final_video = concatenate_videoclips(
+# Main reel
+main_video = concatenate_videoclips(
     extended_clips,
     method="compose"
 )
 
-# Trim exactly to audio duration
-final_video = final_video.subclipped(
+main_video = main_video.subclipped(
     0,
     audio_duration
 )
 
-# Add narration
+# Hook screen
+hook_clip = (
+    ImageClip(hook_path)
+    .with_duration(2)
+)
+
+# Combine hook + reel
+final_video = concatenate_videoclips(
+    [
+        hook_clip,
+        main_video
+    ],
+    method="compose"
+)
+
+# ==========================
+# Background Music
+# ==========================
+
+music_path = os.path.join(
+    "assets",
+    "music",
+    "bg.mp3"
+)
+
+try:
+
+    bg_music = AudioFileClip(
+        music_path
+    )
+
+    # Reduce volume
+    try:
+        bg_music = bg_music.with_volume_scaled(
+            0.10
+        )
+    except:
+        pass
+
+    # Trim music to reel length
+    reel_duration = (
+        audio_duration + 2
+    )
+
+    if bg_music.duration > reel_duration:
+
+        bg_music = bg_music.subclipped(
+            0,
+            reel_duration
+        )
+
+    voice_audio = audio.with_start(
+        2
+    )
+
+    final_audio = CompositeAudioClip(
+        [
+            bg_music,
+            voice_audio
+        ]
+    )
+
+    print(
+        "Background music added."
+    )
+
+except Exception as e:
+
+    print(
+        "Background music not found."
+    )
+
+    print(e)
+
+    final_audio = audio.with_start(
+        2
+    )
+
+# Attach audio
 final_video = final_video.with_audio(
-    audio
+    final_audio
 )
 
 output_file = os.path.join(
@@ -143,7 +231,9 @@ output_file = os.path.join(
     "final_reel_vertical.mp4"
 )
 
-print("Rendering reel...")
+print(
+    "Rendering reel..."
+)
 
 final_video.write_videofile(
     output_file,
