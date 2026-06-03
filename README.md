@@ -1,121 +1,65 @@
 # Finance Reel Generator
 
 ## Overview
+## Project Goal
+## Current Version
 
-Finance Reel Generator is a fully automated AI-powered content creation pipeline that generates finance reels for Instagram using a single command.
+Version: V1.1
 
-The project automatically:
-
-* Generates a finance topic using Gemini
-* Creates a viral hook
-* Writes a finance script
-* Generates AI narration
-* Creates scene plans
-* Downloads relevant stock footage
-* Creates a vertical reel
-* Adds a hook screen
-* Adds background music
-* Generates subtitles
-* Burns subtitles into the final video
-
-Final output:
-
-```bash
-python run.py
-```
-
-↓
-
-```text
-final_reel_captioned.mp4
-```
+Status: Production Ready
 
 ---
 
-# Project Goal
+## Features
 
-The purpose of this project is to automate the entire short-form content creation workflow.
+### V1.0 Features
+- AI Topic Generation
+- AI Script Generation
+- AI Voice Generation
+- Scene Planning
+- Pexels Footage Download
+- Hook Screen
+- Background Music
+- Vertical Reel Creation
+- Subtitle Generation
+- Subtitle Timing Sync
+- Subtitle Burn-In
 
-Traditional Workflow:
-
-```text
-Research Topic
-↓
-Write Script
-↓
-Record Voice
-↓
-Find Videos
-↓
-Edit Reel
-↓
-Add Subtitles
-↓
-Upload
-```
-
-Automated Workflow:
-
-```text
-python run.py
-↓
-Everything Automated
-```
+### V1.1 Features
+- Cloudinary Upload
+- Instagram Graph API Integration
+- Facebook Page Integration
+- Instagram Business Account Integration
+- Automatic Reel Publishing
+- Dynamic Reel Detection
+- Dynamic Creation ID Handling
+- Instagram Processing Polling
+- One Command Publishing
 
 ---
 
-# Current Version
+## Complete Architecture
 
-Version: V1 MVP
-
-Status: Completed
-
-Implemented Features:
-
-* AI Topic Generation
-* AI Script Generation
-* AI Voice Generation
-* Scene Planning
-* Stock Footage Download
-* Hook Screen
-* Background Music
-* Vertical Reel Creation
-* Subtitle Generation
-* Subtitle Timing Sync
-* Subtitle Burn-In
-* One-Click Automation
-
----
-
-# Complete Architecture
-
-```text
 run.py
 │
 ├── topic_generator.py
-│
 ├── generate_voice.py
-│
 ├── generate_scenes.py
-│
 ├── download_videos.py
-│
 ├── create_hook.py
-│
 ├── create_reel.py
-│
 ├── generate_subtitles.py
-│
 ├── shift_subtitles.py
+├── burn_subtitles.py
 │
-└── burn_subtitles.py
-```
+├── utils.py
+├── upload_to_cloudinary.py
+└── instagram_publisher.py
 
 ---
 
-# End-To-End Flow
+## Complete End-To-End Flow
 
-```text
 Gemini
 │
 ├── Title
@@ -190,13 +134,35 @@ FFmpeg
 ▼
 
 final_reel_captioned.mp4
-```
+│
+▼
+
+Cloudinary Upload
+│
+▼
+
+Public URL
+│
+▼
+
+Instagram Container
+│
+▼
+
+Instagram Processing
+│
+▼
+
+Instagram Publish
+│
+▼
+
+LIVE REEL
 
 ---
 
-# Folder Structure
+## Folder Structure
 
-```text
 FinanceAgent/
 
 ├── assets/
@@ -214,7 +180,10 @@ FinanceAgent/
 │   ├── create_reel.py
 │   ├── generate_subtitles.py
 │   ├── shift_subtitles.py
-│   └── burn_subtitles.py
+│   ├── burn_subtitles.py
+│   ├── utils.py
+│   ├── upload_to_cloudinary.py
+│   └── instagram_publisher.py
 │
 ├── temp/
 │
@@ -222,7 +191,6 @@ FinanceAgent/
 ├── requirements.txt
 ├── README.md
 └── .env
-```
 
 ---
 
@@ -230,418 +198,197 @@ FinanceAgent/
 
 ## 1. topic_generator.py
 
-### Purpose
+Purpose:
+Generate title, hook, script and keyword using Gemini.
 
-Generates finance content using Gemini.
-
-### Technology
-
-* Gemini 2.5 Flash
-
-### Input
-
+Input:
 None
 
-### Process
-
-```text
-Prompt Gemini
-↓
-Generate:
-Title
-Hook
-Script
-Keyword
-```
-
-### Output
-
-```text
+Output:
 topic.json
-```
 
-### Example
-
-```json
-{
-  "title": "STOP Doing This With Money",
-  "hook": "Most people lose money because of this...",
-  "script": "...",
-  "keyword": "Personal Finance"
-}
-```
-
-### Future Improvements
-
-* Trend detection
-* Multiple topic generation
-* Topic scoring
+Future:
+- Trend detection
+- Topic scoring
+- Multiple topic generation
 
 ---
 
 ## 2. generate_voice.py
 
-### Purpose
+Purpose:
+Convert script to narration using Edge TTS.
 
-Converts script into narration.
-
-### Technology
-
-* Edge TTS
-
-### Input
-
-```text
+Input:
 topic.json
-```
 
-### Process
-
-```text
-Read Script
-↓
-Extract Script Section
-↓
-Convert To Speech
-```
-
-### Output
-
-```text
+Output:
 voice.mp3
-```
-
-### Problem Solved
-
-Originally voice was reading:
-
-```text
-***
-TITLE
-HOOK
-```
-
-Now only the script section is spoken.
 
 ---
 
 ## 3. generate_scenes.py
 
-### Purpose
+Purpose:
+Generate scene descriptions from script.
 
-Creates scene descriptions for the reel.
-
-### Technology
-
-* Gemini
-
-### Input
-
-```text
+Input:
 topic.json
-```
 
-### Output
-
-```text
+Output:
 scenes.json
-```
-
-### Example
-
-```json
-[
-  "person checking investment app",
-  "stock market chart",
-  "retirement planning"
-]
-```
-
-### Why Needed
-
-Without scene planning:
-
-```text
-Random footage
-```
-
-With scene planning:
-
-```text
-Relevant footage
-```
 
 ---
 
 ## 4. download_videos.py
 
-### Purpose
+Purpose:
+Download relevant stock footage using Pexels.
 
-Downloads stock footage.
-
-### Technology
-
-* Pexels API
-
-### Input
-
-```text
+Input:
 scenes.json
-```
 
-### Process
-
-```text
-Scene
-↓
-Search Pexels
-↓
-Find Vertical Video
-↓
-Download
-```
-
-### Output
-
-```text
+Output:
 videos/
-```
-
-### Current Logic
-
-```text
-8 scenes
-↓
-8 searches
-↓
-5-15 downloaded clips
-```
 
 ---
 
 ## 5. create_hook.py
 
-### Purpose
+Purpose:
+Generate first 2-second hook screen.
 
-Creates the opening hook screen.
-
-### Input
-
-```text
-Title
-```
-
-### Output
-
-```text
+Output:
 hook.png
-```
-
-### Example
-
-```text
-STOP
-WASTING
-MONEY
-LIKE
-THIS
-```
-
-### Why
-
-The first 2 seconds determine reel retention.
 
 ---
 
 ## 6. create_reel.py
 
-### Purpose
+Purpose:
+Create vertical reel.
 
-Creates the main reel.
+Inputs:
+- Videos
+- Voice
+- Hook
+- Background Music
 
-### Technologies
-
-* MoviePy
-
-### Inputs
-
-```text
-videos/
-voice.mp3
-hook.png
-bg.mp3
-```
-
-### Process
-
-```text
-Load Videos
-↓
-Crop To Vertical
-↓
-Resize
-↓
-Trim
-↓
-Merge
-↓
-Loop Clips
-↓
-Add Hook
-↓
-Add Voice
-↓
-Add Music
-```
-
-### Output
-
-```text
+Output:
 final_reel_vertical.mp4
-```
 
-### Improvements Implemented
-
-* Vertical crop
-* Hook screen
-* Background music
-* Audio sync
-* Video looping
-
-### Problems Solved
-
-#### Problem
-
-Video ended before audio.
-
-#### Solution
-
-Auto looping clips until narration finishes.
+Features:
+- Vertical crop
+- Auto looping
+- Audio sync
+- Background music
+- Hook screen
 
 ---
 
 ## 7. generate_subtitles.py
 
-### Purpose
+Purpose:
+Generate subtitles using Faster Whisper.
 
-Creates subtitles.
-
-### Technology
-
-* Faster Whisper
-
-### Input
-
-```text
-voice.mp3
-```
-
-### Output
-
-```text
+Output:
 subtitles.srt
-```
-
-### Example
-
-```srt
-1
-00:00:00,000 --> 00:00:03,280
-
-Want your money to make money effortlessly?
-```
-
-### Why
-
-Many Instagram users watch without sound.
 
 ---
 
 ## 8. shift_subtitles.py
 
-### Purpose
+Purpose:
+Shift subtitles by 2 seconds because narration starts after hook screen.
 
-Sync subtitles with narration.
-
-### Why Needed
-
-Hook screen occupies:
-
-```text
-0-2 seconds
-```
-
-Voice starts:
-
-```text
-2 seconds
-```
-
-Subtitles originally started:
-
-```text
-0 seconds
-```
-
-### Process
-
-```text
-Shift every subtitle timestamp
-+2 seconds
-```
-
-### Result
-
-Subtitles appear exactly when narration starts.
+Output:
+Updated subtitles.srt
 
 ---
 
 ## 9. burn_subtitles.py
 
-### Purpose
+Purpose:
+Burn subtitles permanently using FFmpeg.
 
-Burn subtitles into video permanently.
-
-### Technology
-
-* FFmpeg
-
-### Input
-
-```text
-final_reel_vertical.mp4
-subtitles.srt
-```
-
-### Output
-
-```text
+Output:
 final_reel_captioned.mp4
-```
-
-### Why FFmpeg
-
-* Fast
-* Reliable
-* Industry standard
 
 ---
 
-## 10. run.py
+## 10. utils.py
 
-### Purpose
+Purpose:
+Automatically locate latest generated reel.
 
-Master controller.
+Example:
 
-### Command
+get_latest_video()
 
-```bash
+Returns:
+
+output/<latest_timestamp>/final_reel_captioned.mp4
+
+Problem Solved:
+
+No hardcoded folder names.
+
+---
+
+## 11. upload_to_cloudinary.py
+
+Purpose:
+Upload final reel to Cloudinary.
+
+Input:
+final_reel_captioned.mp4
+
+Output:
+Public video URL
+
+Why Needed:
+
+Instagram requires a publicly accessible video URL.
+
+---
+
+## 12. instagram_publisher.py
+
+Purpose:
+Publish reel to Instagram automatically.
+
+Flow:
+
+Latest Reel
+↓
+Upload To Cloudinary
+↓
+Create Instagram Container
+↓
+Wait Until Processing Complete
+↓
+Publish Reel
+
+Problems Solved:
+
+- Dynamic Creation IDs
+- Dynamic Video URLs
+- Instagram Processing Delay
+- No Manual Publishing
+
+---
+
+## 13. run.py
+
+Purpose:
+Master pipeline controller.
+
+Command:
+
 python run.py
-```
 
-### Executes
+Flow:
 
-```text
 Topic Generation
 ↓
 Voice Generation
@@ -659,290 +406,182 @@ Subtitle Generation
 Subtitle Sync
 ↓
 Subtitle Burn-In
-```
-
-### Final Output
-
-```text
-final_reel_captioned.mp4
-```
+↓
+Cloudinary Upload
+↓
+Instagram Publishing
 
 ---
 
-# Output Structure
+## Meta Infrastructure
 
-Example:
+Meta App:
+Finance Reel Generator
 
-```text
-output/
+Facebook Page:
+FintechBot Daily
 
-└── 20260602_114141/
+Facebook Page ID:
+1144735958728121
 
-    topic.json
+Instagram Username:
+fintechbot.daily
 
-    scenes.json
+Instagram Business Account ID:
+17841424535685192
 
-    voice.mp3
-
-    hook.png
-
-    subtitles.srt
-
-    final_reel_vertical.mp4
-
-    final_reel_captioned.mp4
-
-    videos/
-```
+Status:
+Working
 
 ---
 
-# Common Issues Solved
+## Common Issues Solved
 
-## Issue 1
+### Voice reading Gemini formatting
+Fixed by extracting only script section.
 
-Voice reading Gemini formatting.
+### Video shorter than narration
+Fixed using automatic clip looping.
 
-### Fix
+### Subtitles appearing on hook screen
+Fixed using subtitle shifting.
 
-Extract script only.
+### Hardcoded output folders
+Fixed using utils.py.
 
----
+### Hardcoded Creation IDs
+Fixed using dynamic container creation.
 
-## Issue 2
+### Instagram publishing before processing
+Fixed using status polling.
 
-Video shorter than narration.
-
-### Fix
-
-Loop clips automatically.
-
----
-
-## Issue 3
-
-Subtitles appearing on hook screen.
-
-### Fix
-
-shift_subtitles.py
+### Cloudinary upload automation
+Implemented.
 
 ---
 
-## Issue 4
+## Version History
 
-FFmpeg not detected.
+### Version 1.0
+AI Reel Generator
 
-### Fix
+Status:
+Completed
 
-Install FFmpeg and use explicit executable path.
+### Version 1.1
+Instagram Auto Publishing
 
----
+Status:
+Completed
 
-## Issue 5
+Achievements:
+- Cloudinary Integration
+- Instagram Graph API Integration
+- Automated Publishing
+- One Command Publishing
 
-Stock footage ended before narration.
-
-### Fix
-
-Timeline extension and clip looping.
-
----
-
-# Version 2 Roadmap
+### Version 2.0 (Planned)
 
 Goal:
+Replace stock footage with AI-generated visuals.
 
-Replace stock footage with AI visuals.
-
-Current:
-
-```text
-Gemini
-↓
-Scenes
-↓
-Pexels
-↓
-Videos
-```
-
-Future:
-
-```text
-Gemini
-↓
-Scene Prompts
-↓
-AI Image Generation
-↓
-Animation
-↓
-Reel
-```
-
-Potential Tools:
-
-* Gemini Image Generation
-* Flux
-* Stable Diffusion
-* Kling
-* Runway
+Tools:
+- Flux
+- Stable Diffusion
+- Kling
+- Runway
 
 Expected Quality:
-
-```text
-Current:
-6.5/10
-
-Version 2:
 8.5/10
-```
-
-Benefits:
-
-* Better storytelling
-* Better visual consistency
-* More unique content
-* Higher engagement
 
 ---
 
-# Version 3 Roadmap
+### Version 3.0 (Planned)
 
 Goal:
+Autonomous Content Agent
 
-Fully Autonomous Instagram Agent
+Pipeline:
 
-Architecture:
-
-```text
 Scheduler
 ↓
 Generate Topic
 ↓
 Generate Reel
 ↓
-Upload To Instagram
+Publish Reel
 ↓
 Collect Analytics
 ↓
-Store Results
-```
-
-Capabilities:
-
-* Auto posting
-* Auto captions
-* Auto hashtags
-* Analytics tracking
-* Performance monitoring
-
-Pipeline:
-
-```text
-python run.py
-
+Store Metrics
 ↓
-
-Create Reel
-
-↓
-
-Upload Reel
-
-↓
-
-Instagram Post
-
-↓
-
-Collect Analytics
-
-↓
-
 Improve Future Content
-```
+
+Features:
+- Auto Posting
+- Auto Captions
+- Auto Hashtags
+- Analytics Tracking
+- Performance Monitoring
 
 ---
 
-# Installation
+## Installation
 
-Create Environment
-
-```bash
 python -m venv venv
-```
 
-Activate
-
-```bash
 venv\Scripts\activate
-```
 
-Install Dependencies
-
-```bash
 pip install -r requirements.txt
-```
 
 ---
 
-# Environment Variables
+## Environment Variables
 
-Create `.env`
+GEMINI_API_KEY=
 
-```env
-GEMINI_API_KEY=YOUR_GEMINI_API_KEY
+PEXELS_API_KEY=
 
-PEXELS_API_KEY=YOUR_PEXELS_API_KEY
-```
+META_ACCESS_TOKEN=
+
+INSTAGRAM_BUSINESS_ID=
+
+CLOUDINARY_CLOUD_NAME=
+
+CLOUDINARY_API_KEY=
+
+CLOUDINARY_API_SECRET=
 
 ---
 
-# Usage
+## Usage
 
-Run Everything
-
-```bash
 python run.py
-```
 
-Final Output:
+Output:
 
-```text
-output/<timestamp>/
-
-final_reel_captioned.mp4
-```
+Instagram Reel Published Automatically
 
 ---
 
-# Project Status
+## Current Status
 
-Version 1 MVP
+Version: V1.1
 
-Completed Successfully
+Status: COMPLETE
 
-Current Features:
+Result:
 
-* AI Content Generation
-* AI Narration
-* Scene Planning
-* Stock Footage Download
-* Hook Screen
-* Background Music
-* Subtitle Generation
-* Subtitle Synchronization
-* Subtitle Burn-In
-* One Click Automation
+python run.py
 
-Next Milestone:
+↓
 
-Version 2
-AI Generated Visuals
+Generate Reel
 
-Future Milestone:
+↓
 
-Version 3
-Fully Autonomous Instagram Content Agent
+Upload To Instagram
+
+↓
+
+Instagram Reel Live
