@@ -9,7 +9,8 @@ steps = [
     "python scripts/create_reel.py",
     "python scripts/generate_subtitles.py",
     "python scripts/shift_subtitles.py",
-    "python scripts/burn_subtitles.py"
+    "python scripts/burn_subtitles.py",
+    "python scripts/instagram_publisher.py"
 ]
 
 for step in steps:
